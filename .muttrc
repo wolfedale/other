@@ -1,0 +1,163 @@
+set from = "foo@bar"
+set realname = "Foo Bar"
+set imap_user = "foo@bar"
+set imap_pass = "pass"
+set folder = "imaps://mail.foo.bar:993"
+set spoolfile = "+INBOX"
+set smtp_url = "smtp://foo@mail.foo.bar:587/"
+set smtp_pass = "pass" # use the same passowrd as for IMAP
+set move = no  #Stop asking to "move read messages to mbox"!
+set imap_keepalive = 900
+set timeout=10
+set record="=Sent"
+set postponed="=Drafts"
+
+set alias_file       = ~/.mutt/alias         # where to store aliases
+set header_cache     = ~/.mutt/cache/headers # where to store headers
+set message_cachedir = ~/.mutt/cache/bodies  # where to store bodies
+set certificate_file = ~/.mutt/certificates  # where to store certs
+set mailcap_path     = ~/.mutt/mailcap       # entries for filetypes
+set tmpdir           = ~/.mutt/temp          # where to keep temp files
+set signature        = ~/.mutt/sig           # my signature file
+
+# Index View Options ---------------------------------
+set date_format = "%y/%m/%d %H:%M"
+set index_format = "[%Z]  %D  %-20.20F  %s"
+set sort_browser=date
+set sort=threads
+set sort_aux = last-date-received
+#set sort=reverse-last-date-received
+set uncollapse_jump                        # don't collapse on an unread message
+set sort_re                                # thread based on regex
+set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
+
+bind index "G" sync-mailbox
+
+# Pager View Options ---------------------------------
+set pager_index_lines = 10 # number of index lines to show
+set pager_context = 3      # number of context lines to show
+set pager_stop             # don't go to next message automatically
+set menu_scroll            # scroll in menus
+set tilde                  # show tildes like in vim
+unset markers              # no ugly plus signs
+
+set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
+
+#alternative_order text/html text/enriched text/plain
+auto_view text/html text/html
+alternative_order text/plain text/enriched text/html
+
+# View attachments properly.
+set mailcap_path="~/.mailcap"
+bind attach <return> view-mailcap
+bind index "^" imap-fetch-mail
+
+macro pager \Cu "|urlview<enter>" "call urlview to open links"
+
+set query_command = "contacts -Sf '%eTOKEN%n' '%s' | sed -e 's/TOKEN/\t/g'"
+bind editor <Tab> complete-query
+bind editor ^T    complete
+
+
+# Ctrl-R to mark all as read
+macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
+
+# Status Bar -----------------------------------------
+set status_chars  = " *%A"
+set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+
+mailboxes =INBOX
+set folder=~/.mutt
+
+bind editor <space> noop
+
+# basic colors ---------------------------------------------------------
+color normal        brightyellow    default
+color error         red             default
+color tilde         black           default
+color message       cyan            default
+color markers       red             white
+color attachment    white           default
+color search        brightmagenta   default
+color status        brightyellow    black
+color indicator     brightblack     yellow
+color tree          yellow          default                                     # arrow in threads
+
+# basic monocolor screen
+mono  bold          bold
+mono  underline     underline
+mono  indicator     reverse
+mono  error         bold
+
+# index ----------------------------------------------------------------
+
+color index         red             default         "~A"                        # all messages
+color index         brightred       default         "~E"                        # expired messages
+color index         blue            default         "~N"                        # new messages
+color index         blue            default         "~O"                        # old messages
+color index         brightmagenta   default         "~Q"                        # messages that have been replied to
+color index         brightgreen     default         "~R"                        # read messages
+color index         blue            default         "~U"                        # unread messages
+color index         blue            default         "~U~$"                      # unread, unreferenced messages
+color index         brightyellow    default         "~v"                        # messages part of a collapsed thread
+color index         brightyellow    default         "~P"                        # messages from me
+color index         cyan            default         "~p!~F"                     # messages to me
+color index         cyan            default         "~N~p!~F"                   # new messages to me
+color index         cyan            default         "~U~p!~F"                   # unread messages to me
+color index         brightgreen     default         "~R~p!~F"                   # messages to me
+color index         red             default         "~F"                        # flagged messages
+color index         red             default         "~F~p"                      # flagged messages to me
+color index         red             default         "~N~F"                      # new flagged messages
+color index         red             default         "~N~F~p"                    # new flagged messages to me
+color index         red             default         "~U~F~p"                    # new flagged messages to me
+color index         black           red             "~D"                        # deleted messages
+color index         brightcyan      default         "~v~(!~N)"                  # collapsed thread with no unread
+color index         yellow          default         "~v~(~N)"                   # collapsed thread with some unread
+color index         green           default         "~N~v~(~N)"                 # collapsed thread with unread parent
+color index         red             black           "~v~(~F)!~N"                # collapsed thread with flagged, no unread
+color index         yellow          black           "~v~(~F~N)"                 # collapsed thread with some unread & flagged
+color index         green           black           "~N~v~(~F~N)"               # collapsed thread with unread parent & flagged
+color index         green           black           "~N~v~(~F)"                 # collapsed thread with unread parent, no unread inside, but some flagged
+color index         cyan            black           "~v~(~p)"                   # collapsed thread with unread parent, no unread inside, some to me directly
+color index         yellow          red             "~v~(~D)"                   # thread with deleted (doesn't differentiate between all or partial)
+
+# message headers ------------------------------------------------------
+
+#color header        brightgreen     default         "^"
+color hdrdefault    brightgreen     default
+color header        brightyellow    default         "^(From)"
+color header        blue            default         "^(Subject)"
+
+# body -----------------------------------------------------------------
+
+color quoted        blue            default
+color quoted1       cyan            default
+color quoted2       yellow          default
+color quoted3       red             default
+color quoted4       brightred       default
+
+color signature     brightgreen     default
+color bold          black           default
+color underline     black           default
+color normal        default         default
+#
+color body          brightcyan      default         "[;:][-o][)/(|]"    # emoticons
+color body          brightcyan      default         "[;:][)(|]"         # emoticons
+color body          brightcyan      default         "[*]?((N)?ACK|CU|LOL|SCNR|BRB|BTW|CWYL|\
+                                                     |FWIW|vbg|GD&R|HTH|HTHBE|IMHO|IMNSHO|\
+                                                     |IRL|RTFM|ROTFL|ROFL|YMMV)[*]?"
+color body          brightcyan      default         "[ ][*][^*]*[*][ ]?" # more emoticon?
+color body          brightcyan      default         "[ ]?[*][^*]*[*][ ]" # more emoticon?
+
+## pgp
+
+color body          red             default         "(BAD signature)"
+color body          cyan            default         "(Good signature)"
+color body          brightblack     default         "^gpg: Good signature .*"
+color body          brightyellow    default         "^gpg: "
+color body          brightyellow    red             "^gpg: BAD signature from.*"
+mono  body          bold                            "^gpg: Good signature"
+mono  body          bold                            "^gpg: BAD signature from.*"
+
+# yes, an insance URL regex
+color body          red             default         "([a-z][a-z0-9+-]*://(((([a-z0-9_.!~*'();:&=+$,-]|%[0-9a-f][0-9a-f])*@)?((([a-z0-9]([a-z0-9-]*[a-z0-9])?)\\.)*([a-z]([a-z0-9-]*[a-z0-9])?)\\.?|[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)(:[0-9]+)?)|([a-z0-9_.!~*'()$,;:@&=+-]|%[0-9a-f][0-9a-f])+)(/([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*(;([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*)*(/([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*(;([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*)*)*)?(\\?([a-z0-9_.!~*'();/?:@&=+$,-]|%[0-9a-f][0-9a-f])*)?(#([a-z0-9_.!~*'();/?:@&=+$,-]|%[0-9a-f][0-9a-f])*)?|(www|ftp)\\.(([a-z0-9]([a-z0-9-]*[a-z0-9])?)\\.)*([a-z]([a-z0-9-]*[a-z0-9])?)\\.?(:[0-9]+)?(/([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*(;([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*)*(/([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*(;([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*)*)*)?(\\?([-a-z0-9_.!~*'();/?:@&=+$,]|%[0-9a-f][0-9a-f])*)?(#([-a-z0-9_.!~*'();/?:@&=+$,]|%[0-9a-f][0-9a-f])*)?)[^].,:;!)? \t\r\n<>\"]"
